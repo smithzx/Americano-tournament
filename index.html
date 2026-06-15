@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0f1115">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Американо · Турнир 8</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  :root {
+    --bg: #0f1115;
+    --bg-2: #161922;
+    --bg-3: #1e2230;
+    --line: #262b3a;
+    --line-2: #323849;
+    --text: #eef1f8;
+    --muted: #8891a5;
+    --dim: #5a6278;
+    --accent: #ff6b1a;
+    --accent-2: #ffb23f;
+    --good: #3ecf8e;
+    --bad: #ff5470;
+    --court-1: #4cc9f0;
+    --court-2: #ffb23f;
+    --radius: 14px;
+    --radius-sm: 8px;
+    --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --display: 'Archivo', 'Inter', -apple-system, sans-serif;
+  }
+
+  @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@600;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
+  body {
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.45;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overscroll-behavior-y: none;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+
+  .app {
+    max-width: 720px;
+    margin: 0 auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* === Header === */
+  header {
+    padding: 18px 18px 14px;
+    border-bottom: 1px solid var(--line);
+    background: linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 100%);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    backdrop-filter: blur(8px);
+  }
+  .title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  h1 {
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+    margin: 0;
+    text-transform: uppercase;
+  }
+  h1 .accent { color: var(--accent); }
+  .menu-btn {
+    background: var(--bg-3);
+    border: 1px solid var(--line-2);
+    color: var(--text);
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background 0.15s;
+  }
+  .menu-btn:active { background: var(--line-2); }
+
+  /* === Tabs === */
+  nav.tabs {
+    display: flex;
+    gap: 4px;
+    margin-top: 14px;
+    background: var(--bg-3);
+    padding: 4px;
+    border-radius: var(--radius-sm);
+  }
+  nav.tabs button {
+    flex: 1;
+    padding: 9px 8px;
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.15s;
+  }
+  nav.tabs button.active {
+    background: var(--accent);
+    color: #0f0705;
+  }
+
+  /* === Main === */
+  main {
+    flex: 1;
+    padding: 16px;
+    padding-bottom: 120px;
+  }
+
+  .section-title {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 12px;
+  }
+
+  /* === Players tab === */
+  .players-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .player-input {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 4px 14px 4px 4px;
+    transition: border-color 0.15s;
+  }
+  .player-input:focus-within {
+    border-color: var(--accent);
+  }
+  .player-num {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--bg-3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+  .player-input input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 16px;
+    font-weight: 500;
+    padding: 12px 0;
+    outline: none;
+  }
+  .player-input input::placeholder {
+    color: var(--dim);
+  }
+
+  .hint {
+    color: var(--muted);
+    font-size: 13px;
+    margin: 14px 2px 0;
+    line-height: 1.5;
+  }
+
+  /* === Tournament tab === */
+  .round-switcher {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    margin-bottom: 18px;
+  }
+  .round-switcher button {
+    aspect-ratio: 1;
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    color: var(--muted);
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 16px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    position: relative;
+    transition: all 0.15s;
+  }
+  .round-switcher button.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #0f0705;
+  }
+  .round-switcher button.done::after {
+    content: '';
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--good);
+  }
+  .round-switcher button.active.done::after {
+    background: #0f0705;
+  }
+
+  .match-card {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    margin-bottom: 14px;
+    overflow: hidden;
+  }
+  .court-label {
+    padding: 8px 14px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--line);
+  }
+  .court-label .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+  .court-1 .dot { background: var(--court-1); }
+  .court-2 .dot { background: var(--court-2); }
+  .court-1 .label { color: var(--court-1); }
+  .court-2 .label { color: var(--court-2); }
+
+  .match-body {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: stretch;
+  }
+  .team {
+    padding: 14px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: space-between;
+  }
+  .team-players {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .team-player {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .team-player .idx {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--dim);
+    font-weight: 500;
+  }
+  .score-input {
+    width: 100%;
+    background: var(--bg-3);
+    border: 1px solid var(--line-2);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 26px;
+    font-weight: 700;
+    text-align: center;
+    padding: 10px 4px;
+    border-radius: var(--radius-sm);
+    outline: none;
+    transition: border-color 0.15s;
+    -moz-appearance: textfield;
+  }
+  .score-input::-webkit-outer-spin-button,
+  .score-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .score-input:focus {
+    border-color: var(--accent);
+    background: var(--bg);
+  }
+  .score-input.winner {
+    color: var(--good);
+    border-color: var(--good);
+  }
+  .vs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 11px;
+    color: var(--dim);
+    letter-spacing: 0.15em;
+    padding: 0 6px;
+    background: var(--bg-3);
+  }
+
+  /* === Stats tab === */
+  .stats-table {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .stats-header, .stats-row {
+    display: grid;
+    grid-template-columns: 28px 1fr 58px 64px 50px;
+    align-items: center;
+    padding: 0 10px;
+    gap: 4px;
+  }
+  .stats-header {
+    background: var(--bg-3);
+    padding: 10px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .stats-header > div:nth-child(1),
+  .stats-row > div:nth-child(1) { text-align: center; }
+  .stats-header > div:nth-child(3),
+  .stats-header > div:nth-child(4),
+  .stats-header > div:nth-child(5) { text-align: right; }
+  .stats-row {
+    padding: 12px 10px;
+    border-top: 1px solid var(--line);
+    font-size: 14px;
+  }
+  .stats-row .rank {
+    font-family: var(--display);
+    font-weight: 800;
+    color: var(--muted);
+    text-align: center;
+  }
+  .stats-row.top-1 .rank { color: var(--accent); font-size: 17px; }
+  .stats-row.top-1 { background: linear-gradient(90deg, rgba(255,107,26,0.08), transparent); }
+  .stats-row .name {
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .stats-row .name .player-n {
+    color: var(--dim);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    margin-right: 6px;
+  }
+  .stats-row .gf, .stats-row .ga, .stats-row .diff, .stats-row .wl, .stats-row .gfga {
+    font-family: var(--mono);
+    font-weight: 700;
+    text-align: right;
+  }
+  .stats-row .gf { color: var(--good); }
+  .stats-row .ga { color: var(--bad); }
+  .stats-row .wl {
+    color: var(--text);
+    font-size: 13px;
+  }
+  .stats-row .wl .w { color: var(--good); }
+  .stats-row .wl .l { color: var(--bad); }
+  .stats-row .wl .sep { color: var(--dim); margin: 0 1px; }
+  .stats-row .gfga {
+    font-size: 13px;
+  }
+  .stats-row .gfga .gfn { color: var(--good); }
+  .stats-row .gfga .gan { color: var(--bad); }
+  .stats-row .gfga .sep { color: var(--dim); margin: 0 1px; }
+  .stats-row .diff {
+    font-size: 15px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    background: var(--bg-3);
+    display: inline-block;
+    min-width: 44px;
+  }
+  .stats-row .diff.positive { color: var(--good); }
+  .stats-row .diff.negative { color: var(--bad); }
+  .stats-row .diff.zero { color: var(--muted); }
+
+  .stats-empty {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  /* === Bottom sheet menu === */
+  .backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .backdrop.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .sheet {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg-2);
+    border-top: 1px solid var(--line-2);
+    border-radius: 20px 20px 0 0;
+    padding: 16px 16px calc(24px + env(safe-area-inset-bottom));
+    z-index: 101;
+    transform: translateY(100%);
+    transition: transform 0.22s cubic-bezier(0.32, 0.72, 0.24, 1);
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .sheet.open { transform: translateY(0); }
+  .sheet-handle {
+    width: 36px;
+    height: 4px;
+    background: var(--line-2);
+    border-radius: 2px;
+    margin: 0 auto 14px;
+  }
+  .sheet button.action {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    background: var(--bg-3);
+    border: 1px solid var(--line);
+    color: var(--text);
+    padding: 14px 16px;
+    border-radius: var(--radius-sm);
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    cursor: pointer;
+    text-align: left;
+  }
+  .sheet button.action.danger {
+    color: var(--bad);
+  }
+  .sheet button.action .icon {
+    font-size: 20px;
+    width: 24px;
+    text-align: center;
+  }
+
+  /* === Toast === */
+  .toast {
+    position: fixed;
+    bottom: calc(30px + env(safe-area-inset-bottom));
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--bg-3);
+    color: var(--text);
+    padding: 12px 18px;
+    border-radius: 10px;
+    border: 1px solid var(--line-2);
+    font-size: 14px;
+    font-weight: 500;
+    opacity: 0;
+    transition: all 0.25s;
+    pointer-events: none;
+    z-index: 200;
+    white-space: nowrap;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* === Install banner (iOS/manual) === */
+  .install-hint {
+    background: linear-gradient(135deg, var(--bg-3), var(--bg-2));
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin-bottom: 18px;
+    font-size: 13px;
+    color: var(--muted);
+    display: none;
+  }
+  .install-hint strong { color: var(--accent); }
+  .install-hint .close {
+    float: right;
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 18px;
+    padding: 0;
+    margin-left: 8px;
+  }
+
+  /* === tab content visibility === */
+  .tab-content { display: none; }
+  .tab-content.active { display: block; animation: fadeIn 0.2s ease; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 380px) {
+    h1 { font-size: 19px; }
+    .score-input { font-size: 22px; }
+    .stats-header, .stats-row { grid-template-columns: 24px 1fr 50px 56px 44px; padding: 10px 8px; gap: 2px; }
+    .team-player { font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header>
+    <div class="title-row">
+      <h1>АМЕРИКАНО <span class="accent">·</span> 8</h1>
+      <button class="menu-btn" id="menuBtn" aria-label="Меню">⋯</button>
+    </div>
+    <nav class="tabs">
+      <button data-tab="players" class="active">Игроки</button>
+      <button data-tab="tournament">Турнир</button>
+      <button data-tab="stats">Таблица</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- PLAYERS -->
+    <section class="tab-content active" id="tab-players">
+      <div class="install-hint" id="installHint">
+        <button class="close" id="closeInstall">×</button>
+        <strong>Установить на телефон:</strong> нажмите «Поделиться» → «На главный экран» (iOS), либо в меню Chrome → «Установить приложение» (Android).
+      </div>
+      <p class="section-title">Список игроков (ровно 8)</p>
+      <div class="players-list" id="playersList"></div>
+      <p class="hint">Имена сохраняются автоматически. Когда заполните всех восьмерых — переходите на вкладку «Турнир».</p>
+    </section>
+
+    <!-- TOURNAMENT -->
+    <section class="tab-content" id="tab-tournament">
+      <div class="round-switcher" id="roundSwitcher"></div>
+      <div id="roundMatches"></div>
+    </section>
+
+    <!-- STATS -->
+    <section class="tab-content" id="tab-stats">
+      <p class="section-title">Текущая турнирная таблица</p>
+      <div class="stats-table" id="statsTable"></div>
+      <p class="hint">Место — по разнице забитых и пропущенных. При равной разнице — по результату очного матча (если играли друг против друга), иначе — по бо́льшему числу забитых.</p>
+    </section>
+  </main>
+
+  <!-- Menu sheet -->
+  <div class="backdrop" id="backdrop"></div>
+  <div class="sheet" id="sheet">
+    <div class="sheet-handle"></div>
+    <button class="action" id="exportCsv"><span class="icon">⬇</span> Экспорт в CSV</button>
+    <button class="action" id="exportTxt"><span class="icon">📋</span> Экспорт результата (текст)</button>
+    <button class="action danger" id="resetAll"><span class="icon">↺</span> Начать новый турнир</button>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+(() => {
+  'use strict';
+
+  // ============ РАСПИСАНИЕ (из Excel «турнир») ============
+  // Каждый матч: { round, court, team1:[i,j], team2:[k,l] }
+  // i,j,k,l — индексы игроков (0..7)
+  const SCHEDULE = [
+    { round: 1, court: 1, t1: [0, 4], t2: [1, 5] },
+    { round: 1, court: 2, t1: [2, 6], t2: [3, 7] },
+    { round: 2, court: 1, t1: [0, 5], t2: [4, 6] },
+    { round: 2, court: 2, t1: [1, 7], t2: [2, 3] },
+    { round: 3, court: 1, t1: [0, 6], t2: [5, 7] },
+    { round: 3, court: 2, t1: [4, 3], t2: [1, 2] },
+    { round: 4, court: 1, t1: [0, 7], t2: [6, 3] },
+    { round: 4, court: 2, t1: [5, 2], t2: [4, 1] },
+    { round: 5, court: 1, t1: [0, 3], t2: [7, 2] },
+    { round: 5, court: 2, t1: [6, 1], t2: [5, 4] },
+    { round: 6, court: 1, t1: [0, 2], t2: [3, 1] },
+    { round: 6, court: 2, t1: [7, 4], t2: [6, 5] },
+    { round: 7, court: 1, t1: [0, 1], t2: [2, 4] },
+    { round: 7, court: 2, t1: [3, 5], t2: [7, 6] },
+  ];
+
+  // ============ STATE ============
+  const STORAGE_KEY = 'americano8-v1';
+  const defaultState = () => ({
+    players: ['', '', '', '', '', '', '', ''],
+    // scores[matchIdx] = {s1, s2} | null
+    scores: Array(14).fill(null).map(() => ({ s1: null, s2: null })),
+    activeTab: 'players',
+    activeRound: 1,
+  });
+
+  let state = load();
+
+  function load() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return defaultState();
+      const parsed = JSON.parse(raw);
+      const def = defaultState();
+      return { ...def, ...parsed, scores: parsed.scores || def.scores, players: parsed.players || def.players };
+    } catch {
+      return defaultState();
+    }
+  }
+  function save() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
+  }
+
+  // ============ DOM HELPERS ============
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+
+  function toast(msg) {
+    const t = $('#toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => t.classList.remove('show'), 1800);
+  }
+
+  // ============ PLAYERS TAB ============
+  function renderPlayers() {
+    const list = $('#playersList');
+    list.innerHTML = '';
+    state.players.forEach((name, idx) => {
+      const wrap = document.createElement('div');
+      wrap.className = 'player-input';
+      wrap.innerHTML = `
+        <div class="player-num">${idx + 1}</div>
+        <input type="text" placeholder="Имя игрока ${idx + 1}" maxlength="20"
+               autocomplete="off" autocapitalize="words" inputmode="text">
+      `;
+      const input = wrap.querySelector('input');
+      input.value = name;
+      input.addEventListener('input', e => {
+        state.players[idx] = e.target.value.trim();
+        save();
+        // мягко обновляем другие вкладки
+        renderTournament();
+        renderStats();
+      });
+      list.appendChild(wrap);
+    });
+  }
+
+  // ============ TOURNAMENT TAB ============
+  function playerLabel(idx) {
+    const name = state.players[idx];
+    return name || `Игрок ${idx + 1}`;
+  }
+
+  function renderRoundSwitcher() {
+    const sw = $('#roundSwitcher');
+    sw.innerHTML = '';
+    for (let r = 1; r <= 7; r++) {
+      const btn = document.createElement('button');
+      btn.textContent = r;
+      if (r === state.activeRound) btn.classList.add('active');
+      if (isRoundDone(r)) btn.classList.add('done');
+      btn.addEventListener('click', () => {
+        state.activeRound = r;
+        save();
+        renderTournament();
+      });
+      sw.appendChild(btn);
+    }
+  }
+
+  function isRoundDone(round) {
+    const idxs = SCHEDULE.map((m, i) => m.round === round ? i : -1).filter(i => i >= 0);
+    return idxs.every(i => {
+      const s = state.scores[i];
+      return s && Number.isFinite(s.s1) && Number.isFinite(s.s2);
+    });
+  }
+
+  function renderTournament() {
+    renderRoundSwitcher();
+    const cont = $('#roundMatches');
+    cont.innerHTML = '';
+    SCHEDULE.forEach((m, idx) => {
+      if (m.round !== state.activeRound) return;
+      const card = document.createElement('div');
+      card.className = 'match-card';
+      const s = state.scores[idx] || { s1: null, s2: null };
+      const s1w = Number.isFinite(s.s1) && Number.isFinite(s.s2) && s.s1 > s.s2;
+      const s2w = Number.isFinite(s.s1) && Number.isFinite(s.s2) && s.s2 > s.s1;
+      const courtClass = m.court === 1 ? 'court-1' : 'court-2';
+      card.innerHTML = `
+        <div class="court-label ${courtClass}">
+          <span class="dot"></span>
+          <span class="label">Корт ${m.court}</span>
+          <span style="color:var(--dim); margin-left:auto;">матч ${idx + 1}</span>
+        </div>
+        <div class="match-body">
+          <div class="team">
+            <div class="team-players">
+              <div class="team-player"><span class="idx">${m.t1[0] + 1}</span>${playerLabel(m.t1[0])}</div>
+              <div class="team-player"><span class="idx">${m.t1[1] + 1}</span>${playerLabel(m.t1[1])}</div>
+            </div>
+            <input type="number" class="score-input ${s1w ? 'winner' : ''}"
+                   inputmode="numeric" pattern="[0-9]*" min="0" max="999"
+                   data-match="${idx}" data-side="1"
+                   value="${Number.isFinite(s.s1) ? s.s1 : ''}" placeholder="—">
+          </div>
+          <div class="vs">VS</div>
+          <div class="team">
+            <div class="team-players">
+              <div class="team-player"><span class="idx">${m.t2[0] + 1}</span>${playerLabel(m.t2[0])}</div>
+              <div class="team-player"><span class="idx">${m.t2[1] + 1}</span>${playerLabel(m.t2[1])}</div>
+            </div>
+            <input type="number" class="score-input ${s2w ? 'winner' : ''}"
+                   inputmode="numeric" pattern="[0-9]*" min="0" max="999"
+                   data-match="${idx}" data-side="2"
+                   value="${Number.isFinite(s.s2) ? s.s2 : ''}" placeholder="—">
+          </div>
+        </div>
+      `;
+      cont.appendChild(card);
+    });
+    $$('.score-input', cont).forEach(inp => {
+      inp.addEventListener('input', onScoreInput);
+      inp.addEventListener('blur', onScoreInput);
+    });
+  }
+
+  function onScoreInput(e) {
+    const idx = parseInt(e.target.dataset.match, 10);
+    const side = e.target.dataset.side;
+    const raw = e.target.value.trim();
+    let val = null;
+    if (raw !== '') {
+      const n = parseInt(raw, 10);
+      if (Number.isFinite(n) && n >= 0 && n <= 999) val = n;
+    }
+    if (!state.scores[idx]) state.scores[idx] = { s1: null, s2: null };
+    state.scores[idx][side === '1' ? 's1' : 's2'] = val;
+    save();
+    // обновляем визуал победителя/проигравшего у текущего матча и статистику с раундом
+    renderRoundSwitcher();
+    renderStats();
+    // подсветка победителя без перерисовки инпутов
+    const card = e.target.closest('.match-card');
+    if (card) {
+      const inputs = $$('.score-input', card);
+      const [i1, i2] = inputs;
+      const v1 = parseInt(i1.value, 10);
+      const v2 = parseInt(i2.value, 10);
+      i1.classList.remove('winner');
+      i2.classList.remove('winner');
+      if (Number.isFinite(v1) && Number.isFinite(v2)) {
+        if (v1 > v2) i1.classList.add('winner');
+        else if (v2 > v1) i2.classList.add('winner');
+      }
+    }
+  }
+
+  // ============ STATS TAB ============
+  function computeStats() {
+    const rows = state.players.map((name, i) => ({
+      idx: i, name: playerLabel(i),
+      gf: 0, ga: 0,
+      wins: 0, losses: 0, draws: 0,
+      played: 0,
+    }));
+    SCHEDULE.forEach((m, mIdx) => {
+      const s = state.scores[mIdx];
+      if (!s || !Number.isFinite(s.s1) || !Number.isFinite(s.s2)) return;
+      const t1Win = s.s1 > s.s2, t2Win = s.s2 > s.s1;
+      m.t1.forEach(p => {
+        rows[p].gf += s.s1; rows[p].ga += s.s2; rows[p].played++;
+        if (t1Win) rows[p].wins++; else if (t2Win) rows[p].losses++; else rows[p].draws++;
+      });
+      m.t2.forEach(p => {
+        rows[p].gf += s.s2; rows[p].ga += s.s1; rows[p].played++;
+        if (t2Win) rows[p].wins++; else if (t1Win) rows[p].losses++; else rows[p].draws++;
+      });
+    });
+    rows.forEach(r => r.diff = r.gf - r.ga);
+
+    // --- Очный счёт между двумя игроками (сумма по всем матчам, где они в разных командах) ---
+    function headToHead(aIdx, bIdx) {
+      let aGoals = 0, bGoals = 0, hasMatch = false;
+      SCHEDULE.forEach((m, mi) => {
+        const s = state.scores[mi];
+        if (!s || !Number.isFinite(s.s1) || !Number.isFinite(s.s2)) return;
+        const aInT1 = m.t1.includes(aIdx), aInT2 = m.t2.includes(aIdx);
+        const bInT1 = m.t1.includes(bIdx), bInT2 = m.t2.includes(bIdx);
+        if (aInT1 && bInT2) { aGoals += s.s1; bGoals += s.s2; hasMatch = true; }
+        else if (aInT2 && bInT1) { aGoals += s.s2; bGoals += s.s1; hasMatch = true; }
+      });
+      return { aGoals, bGoals, hasMatch };
+    }
+
+    // --- Мини-таблица для группы из 3+ с одинаковой diff: считаем только матчи между членами группы ---
+    function miniTable(groupIdxs) {
+      const set = new Set(groupIdxs);
+      const stats = {};
+      groupIdxs.forEach(i => stats[i] = { gf: 0, ga: 0 });
+      SCHEDULE.forEach((m, mi) => {
+        const s = state.scores[mi];
+        if (!s || !Number.isFinite(s.s1) || !Number.isFinite(s.s2)) return;
+        const t1In = m.t1.filter(p => set.has(p));
+        const t2In = m.t2.filter(p => set.has(p));
+        if (t1In.length > 0 && t2In.length > 0) {
+          t1In.forEach(p => { stats[p].gf += s.s1; stats[p].ga += s.s2; });
+          t2In.forEach(p => { stats[p].gf += s.s2; stats[p].ga += s.s1; });
+        }
+      });
+      return stats;
+    }
+
+    // --- Рекурсивная сортировка группы с одинаковой diff ---
+    function resolveGroup(group) {
+      if (group.length <= 1) return group;
+      if (group.length === 2) {
+        const [a, b] = group;
+        const h2h = headToHead(a.idx, b.idx);
+        if (h2h.hasMatch && h2h.aGoals !== h2h.bGoals) {
+          return h2h.aGoals > h2h.bGoals ? [a, b] : [b, a];
+        }
+        // фолбэк: больше забил всего → выше
+        if (a.gf !== b.gf) return a.gf > b.gf ? [a, b] : [b, a];
+        return [a, b].sort((x, y) => x.idx - y.idx);
+      }
+      // 3+: мини-таблица среди группы
+      const mt = miniTable(group.map(g => g.idx));
+      return [...group].sort((a, b) => {
+        const da = mt[a.idx].gf - mt[a.idx].ga;
+        const db = mt[b.idx].gf - mt[b.idx].ga;
+        if (db !== da) return db - da;
+        if (mt[b.idx].gf !== mt[a.idx].gf) return mt[b.idx].gf - mt[a.idx].gf;
+        if (b.gf !== a.gf) return b.gf - a.gf;
+        return a.idx - b.idx;
+      });
+    }
+
+    // --- Группируем по diff и сортируем каждую группу ---
+    const byDiff = [...rows].sort((a, b) => b.diff - a.diff);
+    const sorted = [];
+    let i = 0;
+    while (i < byDiff.length) {
+      let j = i;
+      while (j < byDiff.length && byDiff[j].diff === byDiff[i].diff) j++;
+      sorted.push(...resolveGroup(byDiff.slice(i, j)));
+      i = j;
+    }
+
+    // --- Места: 1, 2, 3, ... без пропусков (после тай-брейка каждый получает свой ранг) ---
+    sorted.forEach((r, idx) => { r.rank = idx + 1; });
+    return sorted;
+  }
+
+  function renderStats() {
+    const cont = $('#statsTable');
+    const anyScores = state.scores.some(s => s && Number.isFinite(s.s1) && Number.isFinite(s.s2));
+    if (!anyScores) {
+      cont.innerHTML = `<div class="stats-empty">Ещё нет сыгранных матчей.<br>Введите счёт хотя бы одного матча на вкладке «Турнир».</div>`;
+      return;
+    }
+    const rows = computeStats();
+    let html = `
+      <div class="stats-header">
+        <div>#</div>
+        <div>Игрок</div>
+        <div>ВМ-ПМ</div>
+        <div>З-П</div>
+        <div>Р</div>
+      </div>
+    `;
+    rows.forEach(r => {
+      const diffClass = r.diff > 0 ? 'positive' : r.diff < 0 ? 'negative' : 'zero';
+      const sign = r.diff > 0 ? '+' : '';
+      html += `
+        <div class="stats-row ${r.rank === 1 ? 'top-1' : ''}">
+          <div class="rank">${r.rank}</div>
+          <div class="name"><span class="player-n">${r.idx + 1}</span>${escapeHtml(r.name)}</div>
+          <div class="wl"><span class="w">${r.wins}</span><span class="sep">−</span><span class="l">${r.losses}</span></div>
+          <div class="gfga"><span class="gfn">${r.gf}</span><span class="sep">−</span><span class="gan">${r.ga}</span></div>
+          <div><span class="diff ${diffClass}">${sign}${r.diff}</span></div>
+        </div>
+      `;
+    });
+    cont.innerHTML = html;
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+
+  // ============ TABS ============
+  function setTab(tab) {
+    state.activeTab = tab;
+    save();
+    $$('nav.tabs button').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+    $$('.tab-content').forEach(el => el.classList.toggle('active', el.id === `tab-${tab}`));
+    if (tab === 'tournament') renderTournament();
+    if (tab === 'stats') renderStats();
+    if (tab === 'players') renderPlayers();
+  }
+  $$('nav.tabs button').forEach(b => b.addEventListener('click', () => setTab(b.dataset.tab)));
+
+  // ============ MENU / ACTIONS ============
+  const backdrop = $('#backdrop');
+  const sheet = $('#sheet');
+  function openSheet() { backdrop.classList.add('open'); sheet.classList.add('open'); }
+  function closeSheet() { backdrop.classList.remove('open'); sheet.classList.remove('open'); }
+  $('#menuBtn').addEventListener('click', openSheet);
+  backdrop.addEventListener('click', closeSheet);
+
+  $('#resetAll').addEventListener('click', () => {
+    if (!confirm('Начать новый турнир? Имена и все результаты будут удалены.')) return;
+    state = defaultState();
+    save();
+    setTab('players');
+    renderPlayers();
+    renderTournament();
+    renderStats();
+    closeSheet();
+    toast('Готово к новому турниру');
+  });
+
+  $('#exportCsv').addEventListener('click', () => {
+    closeSheet();
+    const csv = buildCsv();
+    downloadFile('americano.csv', 'text/csv;charset=utf-8', '\uFEFF' + csv);
+    toast('CSV сохранён');
+  });
+
+  $('#exportTxt').addEventListener('click', async () => {
+    closeSheet();
+    const txt = buildTxt();
+    try {
+      await navigator.clipboard.writeText(txt);
+      toast('Результат скопирован');
+    } catch {
+      downloadFile('americano.txt', 'text/plain;charset=utf-8', txt);
+      toast('Файл сохранён');
+    }
+  });
+
+  function buildCsv() {
+    const lines = [];
+    lines.push('Американо, 8 игроков');
+    lines.push('');
+    lines.push('Раунд;Корт;Матч;Команда 1;Счёт 1;Счёт 2;Команда 2');
+    SCHEDULE.forEach((m, i) => {
+      const s = state.scores[i] || {};
+      lines.push([
+        m.round, m.court, i + 1,
+        `${playerLabel(m.t1[0])} + ${playerLabel(m.t1[1])}`,
+        Number.isFinite(s.s1) ? s.s1 : '',
+        Number.isFinite(s.s2) ? s.s2 : '',
+        `${playerLabel(m.t2[0])} + ${playerLabel(m.t2[1])}`,
+      ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(';'));
+    });
+    lines.push('');
+    lines.push('Таблица');
+    lines.push('Место;№;Игрок;ВМ;ПМ;Забито;Пропущено;Разница');
+    computeStats().forEach(r => {
+      lines.push([r.rank, r.idx + 1, r.name, r.wins, r.losses, r.gf, r.ga, r.diff]
+        .map(v => `"${String(v).replace(/"/g, '""')}"`).join(';'));
+    });
+    return lines.join('\n');
+  }
+
+  function buildTxt() {
+    const lines = [];
+    lines.push('🏆 АМЕРИКАНО · 8 игроков');
+    lines.push('');
+    lines.push('── Результаты ──');
+    for (let r = 1; r <= 7; r++) {
+      lines.push(`\nРаунд ${r}:`);
+      SCHEDULE.forEach((m, i) => {
+        if (m.round !== r) return;
+        const s = state.scores[i] || {};
+        const sc = (Number.isFinite(s.s1) && Number.isFinite(s.s2))
+          ? `${s.s1} : ${s.s2}` : '— : —';
+        lines.push(`  К${m.court}. ${playerLabel(m.t1[0])}+${playerLabel(m.t1[1])}  ${sc}  ${playerLabel(m.t2[0])}+${playerLabel(m.t2[1])}`);
+      });
+    }
+    lines.push('');
+    lines.push('── Таблица ──');
+    const rows = computeStats();
+    const nameW = Math.max(...rows.map(r => r.name.length), 5);
+    rows.forEach(r => {
+      const sign = r.diff > 0 ? '+' : r.diff < 0 ? '' : '';
+      const nm = r.name.padEnd(nameW, ' ');
+      const wl = `${r.wins}-${r.losses}`.padStart(5, ' ');
+      const gfga = `${r.gf}-${r.ga}`.padStart(7, ' ');
+      lines.push(`  ${String(r.rank).padStart(2)}. ${nm}   ${wl}   ${gfga}   ${sign}${r.diff}`);
+    });
+    return lines.join('\n');
+  }
+
+  function downloadFile(name, mime, content) {
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  // ============ INSTALL HINT ============
+  (function handleInstall() {
+    const hint = $('#installHint');
+    const dismissed = localStorage.getItem('install-dismissed');
+    const standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    if (!standalone && !dismissed) hint.style.display = 'block';
+    $('#closeInstall').addEventListener('click', () => {
+      hint.style.display = 'none';
+      localStorage.setItem('install-dismissed', '1');
+    });
+  })();
+
+  // ============ INIT ============
+  setTab(state.activeTab || 'players');
+  renderPlayers();
+
+  // ============ SERVICE WORKER ============
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    });
+  }
+})();
+</script>
+</body>
+</html>

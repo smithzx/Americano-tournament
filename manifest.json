@@ -1,0 +1,26 @@
+{
+  "name": "Американо · Турнир 8",
+  "short_name": "Американо 8",
+  "description": "Счёт турнира по схеме «американо» на 8 игроков: 7 раундов, 2 корта, 14 матчей, 28 пар.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f1115",
+  "theme_color": "#0f1115",
+  "lang": "ru",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
